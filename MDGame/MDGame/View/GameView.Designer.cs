@@ -31,23 +31,23 @@
             this.components = new System.ComponentModel.Container();
             this.CoinsValue = new System.Windows.Forms.Label();
             this.HeroSelector = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.Map = new System.Windows.Forms.Panel();
-            this.StartButton = new System.Windows.Forms.Button();
-            this.TimeEnemySpawn = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Map = new System.Windows.Forms.Panel();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.StartButton = new System.Windows.Forms.Button();
+            this.TimeEnemySpawn = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.TimeEnemySpeed = new System.Windows.Forms.Timer(this.components);
             this.HeroSelector.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.Map.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.Map.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,55 +70,6 @@
             this.HeroSelector.Size = new System.Drawing.Size(101, 600);
             this.HeroSelector.TabIndex = 3;
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.pictureBox2);
-            this.panel1.Location = new System.Drawing.Point(199, 23);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(143, 38);
-            this.panel1.TabIndex = 0;
-            // 
-            // Map
-            // 
-            this.Map.Controls.Add(this.pictureBox5);
-            this.Map.Location = new System.Drawing.Point(199, 89);
-            this.Map.Name = "Map";
-            this.Map.Size = new System.Drawing.Size(700, 600);
-            this.Map.TabIndex = 4;
-            // 
-            // StartButton
-            // 
-            this.StartButton.Location = new System.Drawing.Point(397, 23);
-            this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(99, 36);
-            this.StartButton.TabIndex = 5;
-            this.StartButton.Text = "TestStart";
-            this.StartButton.UseVisualStyleBackColor = true;
-            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
-            // 
-            // TimeEnemySpawn
-            // 
-            this.TimeEnemySpawn.Tick += new System.EventHandler(this.TimeEnemySpawn_Tick);
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::MDGame.Properties.Resources.wall_resize;
-            this.pictureBox5.Location = new System.Drawing.Point(0, -2);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(100, 102);
-            this.pictureBox5.TabIndex = 0;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::MDGame.Properties.Resources.CSLife;
-            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(40, 38);
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            // 
             // pictureBox4
             // 
             this.pictureBox4.Image = global::MDGame.Properties.Resources.CSHero2;
@@ -136,6 +87,55 @@
             this.pictureBox3.Size = new System.Drawing.Size(100, 102);
             this.pictureBox3.TabIndex = 0;
             this.pictureBox3.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.pictureBox2);
+            this.panel1.Location = new System.Drawing.Point(199, 23);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(143, 38);
+            this.panel1.TabIndex = 0;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::MDGame.Properties.Resources.CSLife;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(40, 38);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // Map
+            // 
+            this.Map.Controls.Add(this.pictureBox5);
+            this.Map.Location = new System.Drawing.Point(199, 89);
+            this.Map.Name = "Map";
+            this.Map.Size = new System.Drawing.Size(700, 600);
+            this.Map.TabIndex = 4;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::MDGame.Properties.Resources.wall_resize;
+            this.pictureBox5.Location = new System.Drawing.Point(0, -2);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(100, 102);
+            this.pictureBox5.TabIndex = 0;
+            this.pictureBox5.TabStop = false;
+            // 
+            // StartButton
+            // 
+            this.StartButton.Location = new System.Drawing.Point(397, 23);
+            this.StartButton.Name = "StartButton";
+            this.StartButton.Size = new System.Drawing.Size(99, 36);
+            this.StartButton.TabIndex = 5;
+            this.StartButton.Text = "TestStart";
+            this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
+            // 
+            // TimeEnemySpawn
+            // 
+            this.TimeEnemySpawn.Tick += new System.EventHandler(this.TimeEnemySpawn_Tick);
             // 
             // pictureBox1
             // 
@@ -159,13 +159,14 @@
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.HeroSelector.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.Map.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.Map.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

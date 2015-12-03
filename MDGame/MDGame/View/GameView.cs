@@ -246,6 +246,7 @@ namespace MDGame
         private void StartButton_Click(object sender, EventArgs e)
         {
             _controller.GameStart();
+            _controller.EnemySpawn();
             TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn();
 
             TimeEnemySpawn.Enabled = true;
@@ -260,10 +261,13 @@ namespace MDGame
                                           "Time {2}", _controller._selectLocationEnemy, _controller._selectEnemy, TimeEnemySpawn.Interval));
 #endif
             //TimeEnemySpawn.Dispose();
-            _controller.NotifyEnemySpawn();
-            _controller.SuffleEnemyLocationSpawn();
-            _controller.SuffleEnemy();
+            _controller.EnemySpawn();
             TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn();
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }

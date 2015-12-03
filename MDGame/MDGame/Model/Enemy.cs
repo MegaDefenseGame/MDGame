@@ -12,6 +12,8 @@ namespace MDGame
         private int _damange;
         private int _speed;
         private string _imagePath;
+        private int _atX;
+        private int _atY;
 
         public void InitEnemy()
         {
@@ -62,6 +64,30 @@ namespace MDGame
             {
                 if (this._speed != value)
                     this._speed = value;
+            }
+        }
+        public int AtX
+        {
+            get
+            {
+                return this. _atX;
+            }
+            set
+            {
+                if (this._atX != value)
+                    this._atX = value;
+            }
+        }
+        public int AtY
+        {
+            get
+            {
+                return this._atY;
+            }
+            set
+            {
+                if (this._atY != value)
+                    this._atY = value;
             }
         }
     }

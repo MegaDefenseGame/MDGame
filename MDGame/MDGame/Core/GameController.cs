@@ -129,6 +129,12 @@ namespace MDGame.Core
             return this._board.Map;
         }
 
+        public void EnemySpawn()
+        {
+            NotifyEnemySpawn();
+            SuffleEnemyLocationSpawn();
+            SuffleEnemy();
+        }
         public int SuffleEnemyTimeSpawn()
         {
             int time = 0;
@@ -148,12 +154,6 @@ namespace MDGame.Core
             }
             return time;
         }
-
-        public void TickEnemySpawn()
-        {
-
-        }
-
         public void SuffleEnemyLocationSpawn()
         {
             _selectLocationEnemy = rand.Next(1, 5);
@@ -185,6 +185,16 @@ namespace MDGame.Core
                     break;
             }
             _board.Map[_selectLocationEnemy, 6] = _selectEnemy;
+        }
+
+        public void AddHero()
+        {
+
+        
+        }
+        public void AddEnemy()
+        {
+
         }
         //public void TrikEnemy()
         //{

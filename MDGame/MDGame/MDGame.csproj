@@ -49,6 +49,7 @@
     <Compile Include="Core\GameBoard.cs" />
     <Compile Include="Core\GameController.cs" />
     <Compile Include="Core\IView.cs" />
+    <Compile Include="Engine\GameTimer.cs" />
     <Compile Include="Model\Enemy.cs" />
     <Compile Include="View\GameView.cs">
       <SubType>Form</SubType>

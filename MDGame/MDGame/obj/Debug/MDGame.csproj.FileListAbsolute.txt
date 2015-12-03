@@ -13,3 +13,9 @@ C:\Users\Tananut\Documents\GitHubVisualStudio\MDGame\MDGame\MDGame\obj\Debug\MDG
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\bin\Debug\MDGame.exe.config
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.exe
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.pdb
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\bin\Debug\MDGame.exe
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\bin\Debug\MDGame.pdb
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.csprojResolveAssemblyReference.cache
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.Properties.Resources.resources
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.Form1.resources
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.csproj.GenerateResource.Cache

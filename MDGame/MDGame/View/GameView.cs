@@ -214,7 +214,7 @@ namespace MDGame
 
                 int[,] map = _controller.GetMaps(1);
                 _pbMap[i, 6].Image = null;
-                switch (map[i, 6])
+                switch (map[i, 6]) // TODO : mao num
                 {
 
                     case GameBoard.ENEMY1:
@@ -241,16 +241,17 @@ namespace MDGame
 
                 }
             }
-            this.Map.Refresh();
+            //this.Map.Refresh();
         }
         private void StartButton_Click(object sender, EventArgs e)
         {
             _controller.GameStart();
-            _controller.EnemySpawn();
-            TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn();
+            //_controller.EnemySpawn();
+            // Testing Threading Timer
+            //TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn(); 
 
-            TimeEnemySpawn.Enabled = true;
-            TimeEnemySpawn.Start();
+            //TimeEnemySpawn.Enabled = true;
+            //TimeEnemySpawn.Start();
         }
 
         private void TimeEnemySpawn_Tick(object sender, EventArgs e)
@@ -262,7 +263,9 @@ namespace MDGame
 #endif
             //TimeEnemySpawn.Dispose();
             _controller.EnemySpawn();
-            TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn();
+
+            //Testing Threading Timer
+            //TimeEnemySpawn.Interval = _controller.SuffleEnemyTimeSpawn();
 
         }
 

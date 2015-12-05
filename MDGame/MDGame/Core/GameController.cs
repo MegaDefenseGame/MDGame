@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MDGame.Core
@@ -14,6 +15,10 @@ namespace MDGame.Core
         private int _wave;
         public bool _chkStart;
         public bool _heroClick = false;
+
+        
+        
+
         //public GameBoard Board
         //{
         //    get
@@ -62,13 +67,90 @@ namespace MDGame.Core
             Wave = 1;
             EnemyNum = 8;
             _chkStart = true;
+            
         }
         public void GameStart()
         {
             InitGameStart();
-            SuffleEnemyLocationSpawn();
-            SuffleEnemy();
+            //EnemySpawn();
+            //Thread oThreadEnemySpawn = new Thread(new ThreadStart(this.TimeTrickerEnemySpawn));
+            //oThreadEnemySpawn.Start();
+
+            if (enemySpawnThread == null)
+                enemySpawnThread = new Thread(new ThreadStart(this.TimeTrickerEnemySpawn));
+
+            if (!enemySpawnThread.IsAlive)
+                enemySpawnThread.Start();
         }
+
+        Thread enemySpawnThread = null;
+
+        bool _gameRunning = true;
+
+        public void setGameRunning(bool flag)
+        {
+            _gameRunning = flag;
+        }
+
+        int _cntTime = 0;
+        int _cntTimeEnemySpawn = 0;
+        public void TimeTrickerForWalk()
+        {
+            while (_gameRunning)
+            {
+                //foreach (var x in EnenyList)
+                //{
+                //    if (_cntTime % x.walkSpeed == 0)
+                //    {
+
+                //    }
+                   
+                //}
+
+                _cntTime++;
+                Thread.Sleep(1000);
+            }
+        }
+
+        public void TimeTrickerEnemySpawn()
+        {
+            int timeSpawn = rand.Next(1, 4);
+            while (_gameRunning)
+            {
+                _cntTimeEnemySpawn++;
+                Thread.Sleep(1000);
+                
+                
+                switch (timeSpawn)
+                {
+                    case 1:
+                        if (_cntTimeEnemySpawn % 6 == 0)
+                        {
+                            EnemySpawn();
+                            NotifyEnemySpawn();
+                            timeSpawn = rand.Next(1, 4);
+                        }
+                        break;
+                    case 2:
+                        if (_cntTimeEnemySpawn % 8 == 0)
+                        {
+                            EnemySpawn();
+                            NotifyEnemySpawn();
+                            timeSpawn = rand.Next(1, 4);
+                        }
+                        break;
+                    case 3:
+                        if (_cntTimeEnemySpawn % 10 == 0)
+                        {
+                            EnemySpawn();
+                            NotifyEnemySpawn();
+                            timeSpawn = rand.Next(1, 4);
+                        }
+                        break;
+                }
+            }
+        }
+
         public void SelectHeroPosition(int x, int y)
         {
             int heroIndex = y / 100; // +2 in board
@@ -131,60 +213,90 @@ namespace MDGame.Core
 
         public void EnemySpawn()
         {
-            NotifyEnemySpawn();
+            //NotifyEnemySpawn();
             SuffleEnemyLocationSpawn();
             SuffleEnemy();
+            //SuffleEnemyTimeSpawn();
         }
-        public int SuffleEnemyTimeSpawn()
-        {
-            int time = 0;
-            int TimeSpawn;
-            TimeSpawn = rand.Next(1, 3);
-            switch (TimeSpawn)
-            {
-                case 1:
-                    time = 6000;
-                    break;
-                case 2:
-                    time = 8000;
-                    break;
-                case 3:
-                    time = 10000;
-                    break;
-            }
-            return time;
-        }
+        //public void SuffleEnemyTimeSpawn() // LOOK : Test Threading Timer
+        //{
+
+        //    int time = 0;
+        //    int TimeSpawn;
+        //    TimeSpawn = rand.Next(1, 4);
+
+        //    switch (TimeSpawn)
+        //    {
+        //        case 1:
+        //            if (_cntTime % 6 == 0)
+        //                NotifyEnemySpawn();
+        //            break;
+        //        case 2:
+        //            if (_cntTime % 8 == 0)
+        //                NotifyEnemySpawn();
+        //            break;
+        //        case 3:
+        //            if (_cntTime % 10 == 0)
+        //                NotifyEnemySpawn();
+        //            break;
+        //    }
+
+        //    //int time = 0;
+        //    //int TimeSpawn;
+        //    //TimeSpawn = rand.Next(1, 3);
+        //    //switch (TimeSpawn)
+        //    //{
+        //    //    case 1:
+        //    //        time = 6000;
+        //    //        break;
+        //    //    case 2:
+        //    //        time = 8000;
+        //    //        break;
+        //    //    case 3:
+        //    //        time = 10000;
+        //    //        break;
+        //    //}
+        //    //return time;
+        //    NotifyEnemySpawn();
+        //}
         public void SuffleEnemyLocationSpawn()
         {
-            _selectLocationEnemy = rand.Next(1, 5);
+            _selectLocationEnemy = rand.Next(1, 6);
         }
         public void SuffleEnemy() // TODO : Number of Enemy not finished yet !!!! don't forget to do it
         {
-            switch (Wave)
+            switch (Wave) //  TODO : AddEneny() not sure 
             {
                 case 1:
                     if (_enemyNum == 8 || _enemyNum == 7)
                     {
                         _selectEnemy = 11;
+                        AddEnemy();
                     }
                     else
+                    {
                         _selectEnemy = rand.Next(11, 16);
+                        AddEnemy();
+                    }
                     EnemyNum--;
                     break;
                 case 2:
                     _selectEnemy = rand.Next(11, 16);
+                    AddEnemy();
                     EnemyNum--;
                     break;
                 case 3:
                     _selectEnemy = rand.Next(11,16);
+                    AddEnemy();
                     EnemyNum--;
                     break;
                 case 4:
                     _selectEnemy = rand.Next(11, 16);
+                    AddEnemy();
                     EnemyNum--;
                     break;
             }
-            _board.Map[_selectLocationEnemy, 6] = _selectEnemy;
+            _board.Map[_selectLocationEnemy, 6] = _selectEnemy;  // LOOK : Update Location and Enemy here
         }
 
         public void AddHero()
@@ -194,7 +306,27 @@ namespace MDGame.Core
         }
         public void AddEnemy()
         {
+            switch (_selectEnemy)
+            {
+                case 11:
 
+                    break;
+                case 12:
+
+                    break;
+                case 13:
+
+                    break;
+                case 14:
+
+                    break;
+                case 15:
+
+                    break;
+                case 16:
+
+                    break;
+            }
         }
         //public void TrikEnemy()
         //{

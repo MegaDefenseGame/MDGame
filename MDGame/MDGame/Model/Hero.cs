@@ -15,6 +15,7 @@ namespace MDGame.Model
         private int _cost;
         private int _atX;
         private int _atY;
+        private int _id;
         private Image _image;
 
         public void InitHero()
@@ -103,6 +104,18 @@ namespace MDGame.Model
             {
                 if (this._atY != value)
                     this._atY = value;
+            }
+        }
+        public int ID
+        {
+            get
+            {
+                return this._id;
+            }
+            set
+            {
+                if (this._id != value)
+                    this._id = value;
             }
         }
     }

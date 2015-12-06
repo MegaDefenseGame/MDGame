@@ -11,6 +11,7 @@ namespace MDGame
         private int _hp;
         private int _damange;
         private int _speed;
+        private int _id = 0;
         private string _imagePath;
         private int _atX;
         private int _atY;
@@ -90,5 +91,22 @@ namespace MDGame
                     this._atY = value;
             }
         }
+        public int ID
+        {
+            get
+            {
+                return this._id;
+            }
+            set
+            {
+                if (this._id != value)
+                    this._id = value;
+            }
+        }
+        
+        //public void setID(Enemy enemy, int id)
+        //{
+        //    enemy._id = id;
+        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MDGame.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +17,13 @@ namespace MDGame.Core
         public bool _chkStart;
         public bool _heroClick = false;
 
-        
-        
+        private Thread enemySpawnThread = null;
+        private bool _gameRunning = true;
+        private int _cntTime = 0;
+        private int _cntTimeEnemySpawn = 0;
+
+        private int _enemyID = 0;
+        private int _heroID = 0;
 
         //public GameBoard Board
         //{
@@ -83,17 +89,11 @@ namespace MDGame.Core
                 enemySpawnThread.Start();
         }
 
-        Thread enemySpawnThread = null;
-
-        bool _gameRunning = true;
-
         public void setGameRunning(bool flag)
         {
             _gameRunning = flag;
         }
 
-        int _cntTime = 0;
-        int _cntTimeEnemySpawn = 0;
         public void TimeTrickerForWalk()
         {
             while (_gameRunning)
@@ -112,7 +112,7 @@ namespace MDGame.Core
             }
         }
 
-        public void TimeTrickerEnemySpawn()
+        public void TimeTrickerEnemySpawn() // TODO : WAVE complete system!!
         {
             int timeSpawn = rand.Next(1, 4);
             while (_gameRunning)
@@ -188,7 +188,8 @@ namespace MDGame.Core
             int yMapIndex = y / 100;
             if (_heroClick)
             {
-                _board.Map[yMapIndex, xMapIndex] = _selectHero;
+                AddHero();
+                _board.Map[yMapIndex, xMapIndex] = _selectHero;  // TODO : Change _selectHero to _heroID
                 NotifyMap();
                 _heroClick = false;
             }
@@ -268,63 +269,111 @@ namespace MDGame.Core
             switch (Wave) //  TODO : AddEneny() not sure 
             {
                 case 1:
-                    if (_enemyNum == 8 || _enemyNum == 7)
+                    if (_enemyNum == 8 || _enemyNum == 7)      
                     {
-                        _selectEnemy = 11;
+                        _selectEnemy = GameBoard.ENEMY1;
                         AddEnemy();
                     }
                     else
                     {
-                        _selectEnemy = rand.Next(11, 16);
+                        _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7+1);
                         AddEnemy();
                     }
                     EnemyNum--;
                     break;
                 case 2:
-                    _selectEnemy = rand.Next(11, 16);
+                    _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
                     AddEnemy();
                     EnemyNum--;
                     break;
                 case 3:
-                    _selectEnemy = rand.Next(11,16);
+                    _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
                     AddEnemy();
                     EnemyNum--;
                     break;
                 case 4:
-                    _selectEnemy = rand.Next(11, 16);
+                    _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
                     AddEnemy();
                     EnemyNum--;
                     break;
             }
-            _board.Map[_selectLocationEnemy, 6] = _selectEnemy;  // LOOK : Update Location and Enemy here
+            _board.Map[_selectLocationEnemy, 6] = _selectEnemy;  // LOOK : Update Location and Enemy here // TODO : Change _selectEnemy to _enemyID
         }
 
-        public void AddHero()
+        public void AddHero() // TODO : put value of speed hp and damage of Hero!!!
         {
-
-        
-        }
-        public void AddEnemy()
+            switch (_selectHero)
+            {
+                case GameBoard.HERO1:
+                    Hero Hero01 = new Hero();
+                    Hero01.ID = _heroID;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO2:
+                    Hero Hero02 = new Hero();
+                    Hero02.ID = _heroID;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO3:
+                    Hero Hero03 = new Hero();
+                    Hero03.ID = _heroID;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO4:
+                    Hero Hero04 = new Hero();
+                    Hero04.ID = _heroID;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO5:
+                    Hero Hero05 = new Hero();
+                    Hero05.ID = _heroID;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO6:
+                    Hero Hero06 = new Hero();
+                    Hero06.ID = _heroID;
+                    _heroID++;
+                    break;
+            }
+        }       
+        public void AddEnemy()  // TODO : put value of speed hp and damage of Enemy!!!
         {
             switch (_selectEnemy)
             {
-                case 11:
-
+                case GameBoard.ENEMY1:
+                    Enemy Enemy01 = new Enemy();
+                    Enemy01.ID = _enemyID;
+                    _enemyID++;
                     break;
-                case 12:
-
+                case GameBoard.ENEMY2:
+                    Enemy Enemy02 = new Enemy();
+                    Enemy02.ID = _enemyID;
+                    _enemyID++;
                     break;
-                case 13:
-
+                case GameBoard.ENEMY3:
+                    Enemy Enemy03 = new Enemy();
+                    Enemy03.ID = _enemyID;
+                    _enemyID++;
                     break;
-                case 14:
-
+                case GameBoard.ENEMY4:
+                    Enemy Enemy04 = new Enemy();
+                    Enemy04.ID = _enemyID;
+                    _enemyID++;
                     break;
-                case 15:
-
+                case GameBoard.ENEMY5:
+                    Enemy Enemy05 = new Enemy();
+                    Enemy05.ID = _enemyID;
+                    _enemyID++;
                     break;
-                case 16:
-
+                case GameBoard.ENEMY6:
+                    Enemy Enemy06 = new Enemy();
+                    Enemy06.ID = _enemyID;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY7:
+                    Enemy Enemy07 = new Enemy();
+                    Enemy07.ID = _enemyID;
+                    _enemyID++;
                     break;
             }
         }

@@ -13,6 +13,7 @@ namespace MDGame.Model
         private int _damage;
         private int _speed;
         private int _cost;
+        private int _selectHero;
         private int _atX;
         private int _atY;
         private int _id;
@@ -116,6 +117,18 @@ namespace MDGame.Model
             {
                 if (this._id != value)
                     this._id = value;
+            }
+        }
+        public int SelectHero
+        {
+            get
+            {
+                return this._selectHero;
+            }
+            set
+            {
+                if (this._selectHero != value)
+                    this._selectHero = value;
             }
         }
     }

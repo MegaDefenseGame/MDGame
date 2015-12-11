@@ -12,6 +12,7 @@ namespace MDGame
         private int _damange;
         private int _speed;
         private int _id = 0;
+        private int _selectEnemy;
         private string _imagePath;
         private int _atX;
         private int _atY;
@@ -101,6 +102,18 @@ namespace MDGame
             {
                 if (this._id != value)
                     this._id = value;
+            }
+        }
+        public int SelectEnemy
+        {
+            get
+            {
+                return this._selectEnemy;
+            }
+            set
+            {
+                if (this._selectEnemy != value)
+                    this._selectEnemy = value;
             }
         }
         

@@ -18,12 +18,16 @@ namespace MDGame.Core
         public bool _heroClick = false;
 
         private Thread enemySpawnThread = null;
+        private Thread enemyWalk = null;
         private bool _gameRunning = true;
         private int _cntTime = 0;
         private int _cntTimeEnemySpawn = 0;
 
-        private int _enemyID = 0;
+        private int _enemyID = 2;
         private int _heroID = 0;
+
+        public Enemy[] _enemyList = new Enemy[100];
+        public Hero[] _heroList = new Hero[100];
 
         //public GameBoard Board
         //{
@@ -75,6 +79,7 @@ namespace MDGame.Core
             _chkStart = true;
             
         }
+
         public void GameStart()
         {
             InitGameStart();
@@ -204,7 +209,7 @@ namespace MDGame.Core
         public void NotifyEnemySpawn()
         {
             if (_view != null)
-                _view.UpdateEnemy(_board);
+                _view.UpdateEnemySpawn(_board);
         }
 
         public int[,] GetMaps(int state)
@@ -272,110 +277,127 @@ namespace MDGame.Core
                     if (_enemyNum == 8 || _enemyNum == 7)      
                     {
                         _selectEnemy = GameBoard.ENEMY1;
-                        AddEnemy();
+                        
                     }
                     else
                     {
                         _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7+1);
-                        AddEnemy();
+                        
                     }
-                    EnemyNum--;
                     break;
                 case 2:
                     _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
-                    AddEnemy();
-                    EnemyNum--;
+                    //EnemyNum--;
                     break;
                 case 3:
                     _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
-                    AddEnemy();
-                    EnemyNum--;
+                    //EnemyNum--;
                     break;
                 case 4:
                     _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
-                    AddEnemy();
-                    EnemyNum--;
+                    //EnemyNum--;
                     break;
             }
-            _board.Map[_selectLocationEnemy, 6] = _selectEnemy;  // LOOK : Update Location and Enemy here // TODO : Change _selectEnemy to _enemyID
+            _board.Map[_selectLocationEnemy, 6] = _enemyID; // TODO: Bug EnemySpawn Force Fixed!!  // LOOK : Update Location and Enemy here // TODO : Change _selectEnemy to _enemyID
+            AddEnemy();
+            EnemyNum--;
+        }
+
+        public int GetSelectEnemy(/*int i,*/int id)
+        {
+            //if (i == _selectLocationEnemy)
+                return _enemyList[id].SelectEnemy;
+            //else
+            //    return 0;
         }
 
         public void AddHero() // TODO : put value of speed hp and damage of Hero!!!
         {
-            switch (_selectHero)
-            {
-                case GameBoard.HERO1:
-                    Hero Hero01 = new Hero();
-                    Hero01.ID = _heroID;
-                    _heroID++;
-                    break;
-                case GameBoard.HERO2:
-                    Hero Hero02 = new Hero();
-                    Hero02.ID = _heroID;
-                    _heroID++;
-                    break;
-                case GameBoard.HERO3:
-                    Hero Hero03 = new Hero();
-                    Hero03.ID = _heroID;
-                    _heroID++;
-                    break;
-                case GameBoard.HERO4:
-                    Hero Hero04 = new Hero();
-                    Hero04.ID = _heroID;
-                    _heroID++;
-                    break;
-                case GameBoard.HERO5:
-                    Hero Hero05 = new Hero();
-                    Hero05.ID = _heroID;
-                    _heroID++;
-                    break;
-                case GameBoard.HERO6:
-                    Hero Hero06 = new Hero();
-                    Hero06.ID = _heroID;
-                    _heroID++;
-                    break;
-            }
+            Hero oHero = new Hero();
+            oHero.ID = _heroID;
+            oHero.SelectHero = _selectHero;
+            _heroList[_heroID] = new Hero();
+            _heroList[_heroID] = oHero;
+            _heroID++;
+            //switch (_selectHero)
+            //{
+            //    case GameBoard.HERO1:
+            //        Hero Hero01 = new Hero();
+            //        Hero01.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //    case GameBoard.HERO2:
+            //        Hero Hero02 = new Hero();
+            //        Hero02.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //    case GameBoard.HERO3:
+            //        Hero Hero03 = new Hero();
+            //        Hero03.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //    case GameBoard.HERO4:
+            //        Hero Hero04 = new Hero();
+            //        Hero04.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //    case GameBoard.HERO5:
+            //        Hero Hero05 = new Hero();
+            //        Hero05.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //    case GameBoard.HERO6:
+            //        Hero Hero06 = new Hero();
+            //        Hero06.ID = _heroID;
+            //        _heroID++;
+            //        break;
+            //}
         }       
         public void AddEnemy()  // TODO : put value of speed hp and damage of Enemy!!!
         {
-            switch (_selectEnemy)
-            {
-                case GameBoard.ENEMY1:
-                    Enemy Enemy01 = new Enemy();
-                    Enemy01.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY2:
-                    Enemy Enemy02 = new Enemy();
-                    Enemy02.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY3:
-                    Enemy Enemy03 = new Enemy();
-                    Enemy03.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY4:
-                    Enemy Enemy04 = new Enemy();
-                    Enemy04.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY5:
-                    Enemy Enemy05 = new Enemy();
-                    Enemy05.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY6:
-                    Enemy Enemy06 = new Enemy();
-                    Enemy06.ID = _enemyID;
-                    _enemyID++;
-                    break;
-                case GameBoard.ENEMY7:
-                    Enemy Enemy07 = new Enemy();
-                    Enemy07.ID = _enemyID;
-                    _enemyID++;
-                    break;
-            }
+            //switch (_selectEnemy)
+            //{
+            //    case GameBoard.ENEMY1:
+            //Enemy oEnemy = new Enemy();
+            //oEnemy.ID = _enemyID;
+            //oEnemy.SelectEnemy = _selectEnemy;
+            _enemyList[_enemyID] = new Enemy();
+            _enemyList[_enemyID].ID = _enemyID;
+            _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+            //_enemyList[_enemyID] = oEnemy;
+            _enemyID++;
+                //break;
+                //case GameBoard.ENEMY2:
+                //    Enemy Enemy02 = new Enemy();
+                //    Enemy02.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+                //case GameBoard.ENEMY3:
+                //    Enemy Enemy03 = new Enemy();
+                //    Enemy03.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+                //case GameBoard.ENEMY4:
+                //    Enemy Enemy04 = new Enemy();
+                //    Enemy04.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+                //case GameBoard.ENEMY5:
+                //    Enemy Enemy05 = new Enemy();
+                //    Enemy05.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+                //case GameBoard.ENEMY6:
+                //    Enemy Enemy06 = new Enemy();
+                //    Enemy06.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+                //case GameBoard.ENEMY7:
+                //    Enemy Enemy07 = new Enemy();
+                //    Enemy07.ID = _enemyID;
+                //    _enemyID++;
+                //    break;
+            //}
         }
         //public void TrikEnemy()
         //{

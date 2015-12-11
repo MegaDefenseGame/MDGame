@@ -207,42 +207,56 @@ namespace MDGame
             }
             this.Map.Refresh();
         }
-        public void UpdateEnemy(GameBoard board)
+        public void UpdateEnemySpawn(GameBoard board)
         {
             for (int i = 0; i < LENGHT; i++)
             {
 
                 int[,] map = _controller.GetMaps(1);
                 _pbMap[i, 6].Image = null;
-                switch (map[i, 6]) // TODO : mao num
+                int chkEnemyID = map[i, 6];
+                if (chkEnemyID > 1)
                 {
+#if DEBUG
+                    MessageBox.Show(string.Format("Monster spawn {0} \n" +
+                                          "Select enemy {1} \n" +
+                                          "ID : {2}", _controller._selectLocationEnemy, _controller._selectEnemy, map[i, 6]));
+#endif
+                    switch (_controller.GetSelectEnemy(map[i, 6]) /*_controller._enemyList[map[i, 6]]*/ ) // TODO : mao num
+                    {
 
-                    case GameBoard.ENEMY1:
-                        _pbMap[i, 6].Image = _enemyImage[0];
-                        break;
-                    case GameBoard.ENEMY2:
-                        _pbMap[i, 6].Image = _enemyImage[1];
-                        break;
-                    case GameBoard.ENEMY3:
-                        _pbMap[i, 6].Image = _enemyImage[2];
-                        break;
-                    case GameBoard.ENEMY4:
-                        _pbMap[i, 6].Image = _enemyImage[3];
-                        break;
-                    case GameBoard.ENEMY5:
-                        _pbMap[i, 6].Image = _enemyImage[4];
-                        break;
-                    case GameBoard.ENEMY6:
-                        _pbMap[i, 6].Image = _enemyImage[5];
-                        break;
-                    case GameBoard.ENEMY7:
-                        _pbMap[i, 6].Image = _enemyImage[6];
-                        break;
+                        case GameBoard.ENEMY1:
+                            _pbMap[i, 6].Image = _enemyImage[0];
+                            break;
+                        case GameBoard.ENEMY2:
+                            _pbMap[i, 6].Image = _enemyImage[1];
+                            break;
+                        case GameBoard.ENEMY3:
+                            _pbMap[i, 6].Image = _enemyImage[2];
+                            break;
+                        case GameBoard.ENEMY4:
+                            _pbMap[i, 6].Image = _enemyImage[3];
+                            break;
+                        case GameBoard.ENEMY5:
+                            _pbMap[i, 6].Image = _enemyImage[4];
+                            break;
+                        case GameBoard.ENEMY6:
+                            _pbMap[i, 6].Image = _enemyImage[5];
+                            break;
+                        case GameBoard.ENEMY7:
+                            _pbMap[i, 6].Image = _enemyImage[6];
+                            break;
 
+                    }
                 }
             }
             //this.Map.Refresh();
         }
+        public void UpdateEnemy(GameBoard board)
+        {
+
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             _controller.GameStart();

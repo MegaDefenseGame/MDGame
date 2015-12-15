@@ -9,7 +9,7 @@ namespace MDGame.Core
     public interface IView
     {
         void UpdateMap(GameBoard board);
-        void UpdateEnemySpawn(GameBoard _board);
+        void UpdateEnemy(GameBoard _board);
         // eiei
     }
 }

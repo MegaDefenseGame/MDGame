@@ -23,11 +23,11 @@ namespace MDGame.Core
         private int _cntTime = 0;
         private int _cntTimeEnemySpawn = 0;
 
-        private int _enemyID = 2;
-        private int _heroID = 0;
+        private int _enemyID = 600;
+        private int _heroID = 100;
 
-        public Enemy[] _enemyList = new Enemy[100];
-        public Hero[] _heroList = new Hero[100];
+        public Enemy[] _enemyList = new Enemy[1000];
+        public Hero[] _heroList = new Hero[1000];
 
         //public GameBoard Board
         //{
@@ -92,6 +92,12 @@ namespace MDGame.Core
 
             if (!enemySpawnThread.IsAlive)
                 enemySpawnThread.Start();
+
+            if (enemyWalk == null)
+                enemyWalk = new Thread(new ThreadStart(this.TimeTrickerForWalk));
+
+            if (!enemyWalk.IsAlive)
+                enemyWalk.Start();
         }
 
         public void setGameRunning(bool flag)
@@ -103,14 +109,17 @@ namespace MDGame.Core
         {
             while (_gameRunning)
             {
-                //foreach (var x in EnenyList)
-                //{
-                //    if (_cntTime % x.walkSpeed == 0)
-                //    {
+                foreach (var x in _enemyList)
+                {
+                    if (x != null && _cntTime % x.Speed == 0 && _cntTime > 6)
+                    {
+                        x.AtX--;
+                        _board.Map[x.AtY, x.AtX] = x.ID;
+                        _board.Map[x.AtY, x.AtX++] = 0;
+                        NotifyMap();
+                    }
 
-                //    }
-                   
-                //}
+                }
 
                 _cntTime++;
                 Thread.Sleep(1000);
@@ -132,7 +141,7 @@ namespace MDGame.Core
                         if (_cntTimeEnemySpawn % 6 == 0)
                         {
                             EnemySpawn();
-                            NotifyEnemySpawn();
+                            NotifyMap();
                             timeSpawn = rand.Next(1, 4);
                         }
                         break;
@@ -140,7 +149,7 @@ namespace MDGame.Core
                         if (_cntTimeEnemySpawn % 8 == 0)
                         {
                             EnemySpawn();
-                            NotifyEnemySpawn();
+                            NotifyMap();
                             timeSpawn = rand.Next(1, 4);
                         }
                         break;
@@ -148,7 +157,7 @@ namespace MDGame.Core
                         if (_cntTimeEnemySpawn % 10 == 0)
                         {
                             EnemySpawn();
-                            NotifyEnemySpawn();
+                            NotifyMap();
                             timeSpawn = rand.Next(1, 4);
                         }
                         break;
@@ -187,14 +196,16 @@ namespace MDGame.Core
             this._view = view;
         }
 
+        int xMapIndex;
+        int yMapIndex;
         public void MapPosition(int x, int y)
         {
-            int xMapIndex = x / 100;
-            int yMapIndex = y / 100;
+            xMapIndex = x / 100;
+            yMapIndex = y / 100;
             if (_heroClick)
             {
+                _board.Map[yMapIndex, xMapIndex] = _heroID;  // TODO : Change _selectHero to _heroID
                 AddHero();
-                _board.Map[yMapIndex, xMapIndex] = _selectHero;  // TODO : Change _selectHero to _heroID
                 NotifyMap();
                 _heroClick = false;
             }
@@ -206,10 +217,10 @@ namespace MDGame.Core
             if (_view != null)
                 _view.UpdateMap(_board);
         }
-        public void NotifyEnemySpawn()
+        public void NotifyEnemy()
         {
             if (_view != null)
-                _view.UpdateEnemySpawn(_board);
+                _view.UpdateEnemy(_board);
         }
 
         public int[,] GetMaps(int state)
@@ -310,99 +321,150 @@ namespace MDGame.Core
             //else
             //    return 0;
         }
+        public int GetSelectHero(int id)
+        {
+            return _heroList[id].SelectHero;
+        }
 
         public void AddHero() // TODO : put value of speed hp and damage of Hero!!!
         {
-            Hero oHero = new Hero();
-            oHero.ID = _heroID;
-            oHero.SelectHero = _selectHero;
-            _heroList[_heroID] = new Hero();
-            _heroList[_heroID] = oHero;
-            _heroID++;
-            //switch (_selectHero)
-            //{
-            //    case GameBoard.HERO1:
-            //        Hero Hero01 = new Hero();
-            //        Hero01.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //    case GameBoard.HERO2:
-            //        Hero Hero02 = new Hero();
-            //        Hero02.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //    case GameBoard.HERO3:
-            //        Hero Hero03 = new Hero();
-            //        Hero03.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //    case GameBoard.HERO4:
-            //        Hero Hero04 = new Hero();
-            //        Hero04.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //    case GameBoard.HERO5:
-            //        Hero Hero05 = new Hero();
-            //        Hero05.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //    case GameBoard.HERO6:
-            //        Hero Hero06 = new Hero();
-            //        Hero06.ID = _heroID;
-            //        _heroID++;
-            //        break;
-            //}
-        }       
+            //Hero oHero = new Hero();
+            //oHero.ID = _heroID;
+            //oHero.SelectHero = _selectHero;
+            //_heroList[_heroID] = new Hero();
+            //_heroList[_heroID] = oHero;
+            //_heroID++;
+            switch (_selectHero)
+            {
+                case GameBoard.HERO1:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO2:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO3:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO4:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO5:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+                case GameBoard.HERO6:
+                    _heroList[_heroID] = new Hero();
+                    _heroList[_heroID].ID = _heroID;
+                    _heroList[_heroID].SelectHero = _selectHero;
+                    _heroList[_heroID].AtY = yMapIndex;
+                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].Speed = 2;
+                    _heroID++;
+                    break;
+            }
+        }
         public void AddEnemy()  // TODO : put value of speed hp and damage of Enemy!!!
         {
-            //switch (_selectEnemy)
-            //{
-            //    case GameBoard.ENEMY1:
-            //Enemy oEnemy = new Enemy();
-            //oEnemy.ID = _enemyID;
-            //oEnemy.SelectEnemy = _selectEnemy;
-            _enemyList[_enemyID] = new Enemy();
-            _enemyList[_enemyID].ID = _enemyID;
-            _enemyList[_enemyID].SelectEnemy = _selectEnemy;
-            //_enemyList[_enemyID] = oEnemy;
-            _enemyID++;
-                //break;
-                //case GameBoard.ENEMY2:
-                //    Enemy Enemy02 = new Enemy();
-                //    Enemy02.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-                //case GameBoard.ENEMY3:
-                //    Enemy Enemy03 = new Enemy();
-                //    Enemy03.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-                //case GameBoard.ENEMY4:
-                //    Enemy Enemy04 = new Enemy();
-                //    Enemy04.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-                //case GameBoard.ENEMY5:
-                //    Enemy Enemy05 = new Enemy();
-                //    Enemy05.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-                //case GameBoard.ENEMY6:
-                //    Enemy Enemy06 = new Enemy();
-                //    Enemy06.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-                //case GameBoard.ENEMY7:
-                //    Enemy Enemy07 = new Enemy();
-                //    Enemy07.ID = _enemyID;
-                //    _enemyID++;
-                //    break;
-            //}
+            switch (_selectEnemy)
+            {
+                case GameBoard.ENEMY1:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY2:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY3:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY4:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY5:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY6:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++;
+                    break;
+                case GameBoard.ENEMY7:
+                    _enemyList[_enemyID] = new Enemy();
+                    _enemyList[_enemyID].ID = _enemyID;
+                    _enemyList[_enemyID].SelectEnemy = _selectEnemy;
+                    _enemyList[_enemyID].AtY = _selectLocationEnemy;
+                    _enemyList[_enemyID].AtX = 6;
+                    _enemyList[_enemyID].Speed = 5;
+                    _enemyID++; ;
+                    break;
+            }
         }
         //public void TrikEnemy()
         //{
         //    Notify(); // TODO: switch case write enemy picture !!!
         //}
-        
+
     }
 }

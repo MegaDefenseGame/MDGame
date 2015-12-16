@@ -11,11 +11,12 @@ namespace MDGame
         private int _hp;
         private int _damange;
         private int _speed;
-        private int _id = 0;
+        private int _id;
         private int _selectEnemy;
         private string _imagePath;
         private int _atX;
         private int _atY;
+        private int _timer = 0;
 
         public void InitEnemy()
         {
@@ -116,7 +117,19 @@ namespace MDGame
                     this._selectEnemy = value;
             }
         }
-        
+        public int Timer
+        {
+            get
+            {
+                return this._timer;
+            }
+            set
+            {
+                if (this._timer != value)
+                    this._timer = value;
+            }
+        }
+
         //public void setID(Enemy enemy, int id)
         //{
         //    enemy._id = id;

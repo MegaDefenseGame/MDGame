@@ -147,73 +147,78 @@ namespace MDGame
             _controller.MapPosition(x.Location.X, x.Location.Y);
 
         }
+
+        private static object _locker = new object();
         public void UpdateMap(GameBoard baord)
         {
-            for (int i = 1; i < LENGHT; i++)
+            lock (_locker)
             {
-                for (int j = 0; j < WIDTH; j++)
+                for (int i = 1; i < LENGHT; i++)
                 {
-                    int[,] map = _controller.GetMaps(1);
-                    _pbMap[i, j].Image = null;
-
-                    int chkType = map[i, j];
-                    if (chkType > 99 && chkType < 600 )
+                    for (int j = 0; j < WIDTH; j++)
                     {
-                        switch (_controller.GetSelectHero(map[i, j]))
-                        {
-                            //case GameBoard.FLOOR:
-                            //    _pbMap[i, j].Image = _floor;
-                            //    break;
-                            //case GameBoard.WALL:
-                            //    _pbMap[i, j].Image = _wall;
-                            //    break;
-                            case GameBoard.HERO1:
-                                _pbMap[i, j].Image = _heroFightImage[0];
-                                break;
-                            case GameBoard.HERO2:
-                                _pbMap[i, j].Image = _heroFightImage[1];
-                                break;
-                            case GameBoard.HERO3:
-                                _pbMap[i, j].Image = _heroFightImage[2];
-                                break;
-                            case GameBoard.HERO4:
-                                _pbMap[i, j].Image = _heroFightImage[3];
-                                break;
-                            case GameBoard.HERO5:
-                                _pbMap[i, j].Image = _heroFightImage[4];
-                                break;
-                            case GameBoard.HERO6:
-                                _pbMap[i, j].Image = _heroFightImage[5];
-                                break;
+                        int[,] map = _controller.GetMaps(1);
+                        _pbMap[i, j].Image = null;
 
-                            
-                        }    
-                    }
-                    else if (chkType >= 600)
-                    {
-                        switch (_controller.GetSelectEnemy(map[i, j]))
+                        int chkType = map[i, j];
+                        if (chkType > 99 && chkType < 600)
                         {
-                            case GameBoard.ENEMY1:
-                                _pbMap[i, j].Image = _enemyImage[0];
-                                break;
-                            case GameBoard.ENEMY2:
-                                _pbMap[i, j].Image = _enemyImage[1];
-                                break;
-                            case GameBoard.ENEMY3:
-                                _pbMap[i, j].Image = _enemyImage[2];
-                                break;
-                            case GameBoard.ENEMY4:
-                                _pbMap[i, j].Image = _enemyImage[3];
-                                break;
-                            case GameBoard.ENEMY5:
-                                _pbMap[i, j].Image = _enemyImage[4];
-                                break;
-                            case GameBoard.ENEMY6:
-                                _pbMap[i, j].Image = _enemyImage[5];
-                                break;
-                            case GameBoard.ENEMY7:
-                                _pbMap[i, j].Image = _enemyImage[6];
-                                break;
+                            switch (_controller.GetSelectHero(map[i, j]))
+                            {
+                                //case GameBoard.FLOOR:
+                                //    _pbMap[i, j].Image = _floor;
+                                //    break;
+                                //case GameBoard.WALL:
+                                //    _pbMap[i, j].Image = _wall;
+                                //    break;
+                                case GameBoard.HERO1:
+                                    _pbMap[i, j].Image = _heroFightImage[0];
+                                    break;
+                                case GameBoard.HERO2:
+                                    _pbMap[i, j].Image = _heroFightImage[1];
+                                    break;
+                                case GameBoard.HERO3:
+                                    _pbMap[i, j].Image = _heroFightImage[2];
+                                    break;
+                                case GameBoard.HERO4:
+                                    _pbMap[i, j].Image = _heroFightImage[3];
+                                    break;
+                                case GameBoard.HERO5:
+                                    _pbMap[i, j].Image = _heroFightImage[4];
+                                    break;
+                                case GameBoard.HERO6:
+                                    _pbMap[i, j].Image = _heroFightImage[5];
+                                    break;
+
+
+                            }
+                        }
+                        else if (chkType >= 600)
+                        {
+                            switch (_controller.GetSelectEnemy(map[i, j]))
+                            {
+                                case GameBoard.ENEMY1:
+                                    _pbMap[i, j].Image = _enemyImage[0];
+                                    break;
+                                case GameBoard.ENEMY2:
+                                    _pbMap[i, j].Image = _enemyImage[1];
+                                    break;
+                                case GameBoard.ENEMY3:
+                                    _pbMap[i, j].Image = _enemyImage[2];
+                                    break;
+                                case GameBoard.ENEMY4:
+                                    _pbMap[i, j].Image = _enemyImage[3];
+                                    break;
+                                case GameBoard.ENEMY5:
+                                    _pbMap[i, j].Image = _enemyImage[4];
+                                    break;
+                                case GameBoard.ENEMY6:
+                                    _pbMap[i, j].Image = _enemyImage[5];
+                                    break;
+                                case GameBoard.ENEMY7:
+                                    _pbMap[i, j].Image = _enemyImage[6];
+                                    break;
+                            }
                         }
                     }
                 }

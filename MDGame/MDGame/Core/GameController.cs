@@ -17,10 +17,10 @@ namespace MDGame.Core
         public bool _chkStart;
         public bool _heroClick = false;
 
-        private Thread enemySpawnThread = null;
-        private Thread enemyWalk = null;
+        private Thread Timer = null;
+        //private Thread enemyWalk = null;
         private bool _gameRunning = true;
-        private int _cntTime = 0;
+        private int _cntTimeEnemyWalk = 0;
         private int _cntTimeEnemySpawn = 0;
 
         private int _enemyID = 600;
@@ -77,7 +77,7 @@ namespace MDGame.Core
             Wave = 1;
             EnemyNum = 8;
             _chkStart = true;
-            
+
         }
 
         public void GameStart()
@@ -87,17 +87,17 @@ namespace MDGame.Core
             //Thread oThreadEnemySpawn = new Thread(new ThreadStart(this.TimeTrickerEnemySpawn));
             //oThreadEnemySpawn.Start();
 
-            if (enemySpawnThread == null)
-                enemySpawnThread = new Thread(new ThreadStart(this.TimeTrickerEnemySpawn));
+            if (Timer == null)
+                Timer = new Thread(new ThreadStart(this.CoreTimer));
 
-            if (!enemySpawnThread.IsAlive)
-                enemySpawnThread.Start();
+            if (!Timer.IsAlive)
+                Timer.Start();
 
-            if (enemyWalk == null)
-                enemyWalk = new Thread(new ThreadStart(this.TimeTrickerForWalk));
+            //if (enemyWalk == null)
+            //    enemyWalk = new Thread(new ThreadStart(this.TimeTrickerForWalk));
 
-            if (!enemyWalk.IsAlive)
-                enemyWalk.Start();
+            //if (!enemyWalk.IsAlive)
+            //    enemyWalk.Start();
         }
 
         public void setGameRunning(bool flag)
@@ -105,63 +105,158 @@ namespace MDGame.Core
             _gameRunning = flag;
         }
 
-        public void TimeTrickerForWalk()
+        private static object _locker = new object();
+        //public void TimeTrickerForWalk()
+        //{
+        //    lock (_locker)
+        //    {
+        //        while (_gameRunning)
+        //        {
+        //            foreach (var x in _enemyList)
+        //            {
+        //                if (x != null && _cntTime % x.Speed == 0 && _cntTime > 6)
+        //                {
+        //                    x.AtX--;
+        //                    _board.Map[x.AtY, x.AtX] = x.ID;
+        //                    _board.Map[x.AtY, x.AtX++] = 0;
+        //                    NotifyMap();
+        //                }
+
+        //            }
+
+        //            _cntTime++;
+        //            Thread.Sleep(1000);
+        //        }
+        //    }
+
+        //}
+        private bool _enemyIsSpawn = false;
+        private bool _heroIsSpawn = false;
+        private bool _chkChange = false;
+        public void CoreTimer() // TODO : WAVE complete system!!
         {
-            while (_gameRunning)
+            while (true)
             {
-                foreach (var x in _enemyList)
-                {
-                    if (x != null && _cntTime % x.Speed == 0 && _cntTime > 6)
-                    {
-                        x.AtX--;
-                        _board.Map[x.AtY, x.AtX] = x.ID;
-                        _board.Map[x.AtY, x.AtX++] = 0;
-                        NotifyMap();
-                    }
-
-                }
-
-                _cntTime++;
                 Thread.Sleep(1000);
+                _cntTimeEnemySpawn++;
+                CheckToDo();
+                if (_chkChange)
+                {
+                    NotifyMap();
+                    _chkChange = false;
+                }
             }
+
+            //if (_enemyIsSpawn && !_chkChange)
+            //{
+            //    TimeTrickerEnemyWalk();  
+            //}
+            //if (_heroIsSpawn && !_chkChange)
+            //{
+            //    TimeTrickerHeroShoot();
+            //    _chkChange = true;
+            //}
+
+            //if (_chkChange)
+            //{
+            //    NotifyMap();
+            //    _chkChange = false;
+            //}            
         }
 
-        public void TimeTrickerEnemySpawn() // TODO : WAVE complete system!!
+
+        public void CheckToDo()
         {
-            int timeSpawn = rand.Next(1, 4);
-            while (_gameRunning)
+            if (!_chkTimeSpawn)
+                SuffleTimeSpawnEnemy();
+            if (_cntTimeEnemySpawn % 6 == 0 || _cntTimeEnemySpawn % 8 == 0 || _cntTimeEnemySpawn % 10 == 0)
+                TimeTrickerEnemySpawn();
+            if (_enemyIsSpawn && !_chkChange)
             {
-                _cntTimeEnemySpawn++;
-                Thread.Sleep(1000);
-                
-                
-                switch (timeSpawn)
+                TimeTrickerEnemyWalk();
+            }
+            if (_heroIsSpawn && !_chkChange)
+            {
+                TimeTrickerHeroShoot();
+                _chkChange = true;
+            }
+
+        }
+        public void TimeTrickerEnemySpawn()
+        {
+            lock (_locker)
+            {
+                if (_chkTimeSpawn)
                 {
-                    case 1:
-                        if (_cntTimeEnemySpawn % 6 == 0)
-                        {
-                            EnemySpawn();
-                            NotifyMap();
-                            timeSpawn = rand.Next(1, 4);
-                        }
-                        break;
-                    case 2:
-                        if (_cntTimeEnemySpawn % 8 == 0)
-                        {
-                            EnemySpawn();
-                            NotifyMap();
-                            timeSpawn = rand.Next(1, 4);
-                        }
-                        break;
-                    case 3:
-                        if (_cntTimeEnemySpawn % 10 == 0)
-                        {
-                            EnemySpawn();
-                            NotifyMap();
-                            timeSpawn = rand.Next(1, 4);
-                        }
-                        break;
+                    switch (_timeSpawn)
+                    {
+                        case 1:
+                            if (_cntTimeEnemySpawn % 6 == 0)
+                            {
+                                EnemySpawn();
+                                _chkChange = true;
+                                _chkTimeSpawn = false;
+                            }
+                            break;
+                        case 2:
+                            if (_cntTimeEnemySpawn % 8 == 0)
+                            {
+                                EnemySpawn();
+                                _chkChange = true;
+                                _chkTimeSpawn = false;
+                            }
+                            break;
+                        case 3:
+                            if (_cntTimeEnemySpawn % 10 == 0)
+                            {
+                                EnemySpawn();
+                                _chkChange = true;
+                                _chkTimeSpawn = false;
+                            }
+                            break;
+                    }
+
+
                 }
+                }
+        
+        }
+        public void TimeTrickerEnemyWalk()
+        {
+            lock (_locker)
+            {
+                while (/*_gameRunning*/ !_chkChange)
+                {
+                    _cntTimeEnemyWalk++;
+            foreach (var x in _enemyList)
+            {
+                if (x != null && _cntTimeEnemyWalk % x.Speed == 0)
+                {
+                    x.AtX--;
+                    _board.Map[x.AtY, x.AtX] = x.ID;
+                    _board.Map[x.AtY, x.AtX++] = 0;
+                    //NotifyMap();
+                }
+
+            }
+                    
+            _chkChange = true;
+                }
+            }
+        }
+        public void TimeTrickerHeroShoot()
+        {
+
+        }
+
+        private bool _chkTimeSpawn = false;
+        private int _timeSpawn;
+        public void SuffleTimeSpawnEnemy()
+        {
+            if (!_chkTimeSpawn)
+            {
+                _timeSpawn = rand.Next(1, 4);
+                _chkTimeSpawn = true;
             }
         }
 
@@ -209,7 +304,7 @@ namespace MDGame.Core
                 NotifyMap();
                 _heroClick = false;
             }
-            
+
         }
 
         public void NotifyMap()
@@ -233,6 +328,7 @@ namespace MDGame.Core
             //NotifyEnemySpawn();
             SuffleEnemyLocationSpawn();
             SuffleEnemy();
+
             //SuffleEnemyTimeSpawn();
         }
         //public void SuffleEnemyTimeSpawn() // LOOK : Test Threading Timer
@@ -285,15 +381,15 @@ namespace MDGame.Core
             switch (Wave) //  TODO : AddEneny() not sure 
             {
                 case 1:
-                    if (_enemyNum == 8 || _enemyNum == 7)      
+                    if (_enemyNum == 8 || _enemyNum == 7)
                     {
                         _selectEnemy = GameBoard.ENEMY1;
-                        
+
                     }
                     else
                     {
-                        _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7+1);
-                        
+                        _selectEnemy = rand.Next(GameBoard.ENEMY1, GameBoard.ENEMY7 + 1);
+
                     }
                     break;
                 case 2:
@@ -317,7 +413,7 @@ namespace MDGame.Core
         public int GetSelectEnemy(/*int i,*/int id)
         {
             //if (i == _selectLocationEnemy)
-                return _enemyList[id].SelectEnemy;
+            return _enemyList[id].SelectEnemy;
             //else
             //    return 0;
         }
@@ -328,6 +424,8 @@ namespace MDGame.Core
 
         public void AddHero() // TODO : put value of speed hp and damage of Hero!!!
         {
+            if (_heroIsSpawn)
+                _heroIsSpawn = true;
             //Hero oHero = new Hero();
             //oHero.ID = _heroID;
             //oHero.SelectHero = _selectHero;
@@ -394,6 +492,8 @@ namespace MDGame.Core
         }
         public void AddEnemy()  // TODO : put value of speed hp and damage of Enemy!!!
         {
+            if (!_enemyIsSpawn)
+                _enemyIsSpawn = true;
             switch (_selectEnemy)
             {
                 case GameBoard.ENEMY1:

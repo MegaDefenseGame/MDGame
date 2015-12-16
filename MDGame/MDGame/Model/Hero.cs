@@ -17,6 +17,7 @@ namespace MDGame.Model
         private int _atX;
         private int _atY;
         private int _id;
+        private int _timer = 0;
         private Image _image;
 
         public void InitHero()
@@ -129,6 +130,18 @@ namespace MDGame.Model
             {
                 if (this._selectHero != value)
                     this._selectHero = value;
+            }
+        }
+        public int Timer
+        {
+            get
+            {
+                return this._timer;
+            }
+            set
+            {
+                if (this._timer != value)
+                    this._timer = value;
             }
         }
     }

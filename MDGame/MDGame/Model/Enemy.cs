@@ -17,6 +17,7 @@ namespace MDGame
         private int _atX;
         private int _atY;
         private int _timer = 0;
+        private int _coinDrop;
 
         public void InitEnemy()
         {
@@ -127,6 +128,18 @@ namespace MDGame
             {
                 if (this._timer != value)
                     this._timer = value;
+            }
+        }
+        public int CoinDrop
+        {
+            get
+            {
+                return this._coinDrop;
+            }
+            set
+            {
+                if (this._coinDrop != value)
+                    this._coinDrop = value;
             }
         }
 

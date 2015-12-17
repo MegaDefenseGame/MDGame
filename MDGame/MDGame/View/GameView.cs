@@ -23,6 +23,8 @@ namespace MDGame
         private Image[] _heroImage;
         private Image[] _heroFightImage;
         private Image[] _enemyImage;
+       
+        
 
         public Form1()
         {
@@ -44,6 +46,7 @@ namespace MDGame
         public void InitMapLocation()
         {
             this.Map.Controls.Clear();
+
             for (int i = 0; i < LENGHT; i++)
             {
                 for (int j = 0; j < WIDTH; j++)
@@ -137,143 +140,158 @@ namespace MDGame
         {
             PictureBox x = sender as PictureBox;
             //MessageBox.Show(x.Location.X + "  " +x.Location.Y);
-            _controller.SelectHeroPosition(0, x.Location.Y);
             _controller._heroClick = true;
+            _controller.SelectHeroPosition(0, x.Location.Y);
+            //x.BackColor = 
+            //if ()
+            
         }
         private void Map_MouseClick(object sender, MouseEventArgs e)
         {
             PictureBox x = sender as PictureBox;
+            string eiei = Convert.ToString(_controller.Coin);
+            //CoinsValue.Text = eiei; TODO : Faster
             //MessageBox.Show(x.Location.X + "  " + x.Location.Y);
             _controller.MapPosition(x.Location.X, x.Location.Y);
 
         }
-
+        
         private static object _locker = new object();
-        public void UpdateMap(GameBoard baord)
+        public void UpdateMap(int[,] mapx)
         {
             lock (_locker)
-            {
-                for (int i = 1; i < LENGHT; i++)
+            { 
+                try
                 {
-                    for (int j = 0; j < WIDTH; j++)
+                    for (int i = 1; i < LENGHT; i++)
                     {
-                        int[,] map = _controller.GetMaps(1);
-                        _pbMap[i, j].Image = null;
-
-                        int chkType = map[i, j];
-                        if (chkType > 99 && chkType < 600)
+                        for (int j = 0; j < WIDTH; j++)
                         {
-                            switch (_controller.GetSelectHero(map[i, j]))
+                            int[,] map = mapx;//baord.Map;//_controller.GetMaps(1);
+                            _pbMap[i, j].Image = null;
+
+                            int chkType = map[i, j];
+                            if (chkType > 99 && chkType < 600)
                             {
-                                //case GameBoard.FLOOR:
-                                //    _pbMap[i, j].Image = _floor;
-                                //    break;
-                                //case GameBoard.WALL:
-                                //    _pbMap[i, j].Image = _wall;
-                                //    break;
-                                case GameBoard.HERO1:
-                                    _pbMap[i, j].Image = _heroFightImage[0];
-                                    break;
-                                case GameBoard.HERO2:
-                                    _pbMap[i, j].Image = _heroFightImage[1];
-                                    break;
-                                case GameBoard.HERO3:
-                                    _pbMap[i, j].Image = _heroFightImage[2];
-                                    break;
-                                case GameBoard.HERO4:
-                                    _pbMap[i, j].Image = _heroFightImage[3];
-                                    break;
-                                case GameBoard.HERO5:
-                                    _pbMap[i, j].Image = _heroFightImage[4];
-                                    break;
-                                case GameBoard.HERO6:
-                                    _pbMap[i, j].Image = _heroFightImage[5];
-                                    break;
+                                switch (_controller.GetSelectHero(map[i, j]))
+                                {
+                                    //case GameBoard.FLOOR:
+                                    //    _pbMap[i, j].Image = _floor;
+                                    //    break;
+                                    //case GameBoard.WALL:
+                                    //    _pbMap[i, j].Image = _wall;
+                                    //    break;
+                                    case GameBoard.HERO1:
+                                        _pbMap[i, j].Image = _heroFightImage[0];
+                                        break;
+                                    case GameBoard.HERO2:
+                                        _pbMap[i, j].Image = _heroFightImage[1];
+                                        break;
+                                    case GameBoard.HERO3:
+                                        _pbMap[i, j].Image = _heroFightImage[2];
+                                        break;
+                                    case GameBoard.HERO4:
+                                        _pbMap[i, j].Image = _heroFightImage[3];
+                                        break;
+                                    case GameBoard.HERO5:
+                                        _pbMap[i, j].Image = _heroFightImage[4];
+                                        break;
+                                    case GameBoard.HERO6:
+                                        _pbMap[i, j].Image = _heroFightImage[5];
+                                        break;
 
 
+                                }
                             }
-                        }
-                        else if (chkType >= 600)
-                        {
-                            switch (_controller.GetSelectEnemy(map[i, j]))
+                            else if (chkType >= 600)
                             {
-                                case GameBoard.ENEMY1:
-                                    _pbMap[i, j].Image = _enemyImage[0];
-                                    break;
-                                case GameBoard.ENEMY2:
-                                    _pbMap[i, j].Image = _enemyImage[1];
-                                    break;
-                                case GameBoard.ENEMY3:
-                                    _pbMap[i, j].Image = _enemyImage[2];
-                                    break;
-                                case GameBoard.ENEMY4:
-                                    _pbMap[i, j].Image = _enemyImage[3];
-                                    break;
-                                case GameBoard.ENEMY5:
-                                    _pbMap[i, j].Image = _enemyImage[4];
-                                    break;
-                                case GameBoard.ENEMY6:
-                                    _pbMap[i, j].Image = _enemyImage[5];
-                                    break;
-                                case GameBoard.ENEMY7:
-                                    _pbMap[i, j].Image = _enemyImage[6];
-                                    break;
+                                switch (_controller.GetSelectEnemy(map[i, j]))
+                                {
+                                    case GameBoard.ENEMY1:
+                                        _pbMap[i, j].Image = _enemyImage[0];
+                                        break;
+                                    case GameBoard.ENEMY2:
+                                        _pbMap[i, j].Image = _enemyImage[1];
+                                        break;
+                                    case GameBoard.ENEMY3:
+                                        _pbMap[i, j].Image = _enemyImage[2];
+                                        break;
+                                    case GameBoard.ENEMY4:
+                                        _pbMap[i, j].Image = _enemyImage[3];
+                                        break;
+                                    case GameBoard.ENEMY5:
+                                        _pbMap[i, j].Image = _enemyImage[4];
+                                        break;
+                                    case GameBoard.ENEMY6:
+                                        _pbMap[i, j].Image = _enemyImage[5];
+                                        break;
+                                    case GameBoard.ENEMY7:
+                                        _pbMap[i, j].Image = _enemyImage[6];
+                                        break;
+                                }
                             }
                         }
                     }
                 }
+                catch
+                {
+
+                }
+               
             }
+            string eiei = Convert.ToString(_controller.EnemyNum);
+            //EnemyNum.Text = "" + _controller.EnemyNum;            // TODO : Faster
             //this.Map.Refresh();
         }
-        public void UpdateEnemy(GameBoard board)
-        {
-            for (int i = 1; i < LENGHT; i++)
-            {
-                for (int j = 0; j < WIDTH; j++)
-                {
+        //public void UpdateEnemy(GameBoard board)
+        //{
+        //    for (int i = 1; i < LENGHT; i++)
+        //    {
+        //        for (int j = 0; j < WIDTH; j++)
+        //        {
 
                
-                int[,] map = _controller.GetMaps(1);
-                _pbMap[i, j].Image = null;
-                int chkEnemyID = map[i, j];
-                if (chkEnemyID > 10)
-                {
-                        //#if DEBUG
-                        //                    MessageBox.Show(string.Format("Monster spawn {0} \n" +
-                        //                                          "Select enemy {1} \n" +
-                        //                                          "ID : {2}", _controller._selectLocationEnemy, _controller._selectEnemy, map[i, 6]));
-                        //#endif
-                        switch (_controller.GetSelectEnemy(map[i, j]) /*_controller._enemyList[map[i, 6]]*/ ) // TODO : mao num
-                        {
+        //        int[,] map = _controller.GetMaps(1);
+        //        _pbMap[i, j].Image = null;
+        //        int chkEnemyID = map[i, j];
+        //        if (chkEnemyID > 10)
+        //        {
+        //                //#if DEBUG
+        //                //                    MessageBox.Show(string.Format("Monster spawn {0} \n" +
+        //                //                                          "Select enemy {1} \n" +
+        //                //                                          "ID : {2}", _controller._selectLocationEnemy, _controller._selectEnemy, map[i, 6]));
+        //                //#endif
+        //                switch (_controller.GetSelectEnemy(map[i, j]) /*_controller._enemyList[map[i, 6]]*/ ) // TODO : mao num
+        //                {
 
-                            case GameBoard.ENEMY1:
-                                _pbMap[i, j].Image = _enemyImage[0];
-                                break;
-                            case GameBoard.ENEMY2:
-                                _pbMap[i, j].Image = _enemyImage[1];
-                                break;
-                            case GameBoard.ENEMY3:
-                                _pbMap[i, j].Image = _enemyImage[2];
-                                break;
-                            case GameBoard.ENEMY4:
-                                _pbMap[i, j].Image = _enemyImage[3];
-                                break;
-                            case GameBoard.ENEMY5:
-                                _pbMap[i, j].Image = _enemyImage[4];
-                                break;
-                            case GameBoard.ENEMY6:
-                                _pbMap[i, j].Image = _enemyImage[5];
-                                break;
-                            case GameBoard.ENEMY7:
-                                _pbMap[i, j].Image = _enemyImage[6];
-                                break;
-                        }
-                    }
-                }
-            }
+        //                    case GameBoard.ENEMY1:
+        //                        _pbMap[i, j].Image = _enemyImage[0];
+        //                        break;
+        //                    case GameBoard.ENEMY2:
+        //                        _pbMap[i, j].Image = _enemyImage[1];
+        //                        break;
+        //                    case GameBoard.ENEMY3:
+        //                        _pbMap[i, j].Image = _enemyImage[2];
+        //                        break;
+        //                    case GameBoard.ENEMY4:
+        //                        _pbMap[i, j].Image = _enemyImage[3];
+        //                        break;
+        //                    case GameBoard.ENEMY5:
+        //                        _pbMap[i, j].Image = _enemyImage[4];
+        //                        break;
+        //                    case GameBoard.ENEMY6:
+        //                        _pbMap[i, j].Image = _enemyImage[5];
+        //                        break;
+        //                    case GameBoard.ENEMY7:
+        //                        _pbMap[i, j].Image = _enemyImage[6];
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //    }
 
-            //this.Map.Refresh();
-        }
+        //    //this.Map.Refresh();
+        //}
         //public void UpdateEnemy(GameBoard board)
         //{
 
@@ -305,7 +323,26 @@ namespace MDGame
 
         }
 
+        private void Shooting()
+        {
+
+        }
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

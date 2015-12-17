@@ -13,7 +13,7 @@ namespace MDGame.Core
         private GameBoard _board = new GameBoard();
         private Random rand = new Random();
         private int _enemyNum;
-        private int _wave;
+        
         public bool _chkStart;
         public bool _heroClick = false;
 
@@ -22,9 +22,13 @@ namespace MDGame.Core
         private bool _gameRunning = true;
         private int _cntTimeEnemyWalk = 0;
         private int _cntTimeEnemySpawn = 0;
+        private int _cntTimeHeroShoot = 0;
 
         private int _enemyID = 600;
         private int _heroID = 100;
+
+        private int _life = 3;
+        private int _coin = 200;
 
         public Enemy[] _enemyList = new Enemy[1000];
         public Hero[] _heroList = new Hero[1000];
@@ -59,23 +63,35 @@ namespace MDGame.Core
                     this._enemyNum = value;
             }
         }
-        public int Wave
+        public int Life
         {
             get
             {
-                return _wave;
+                return this._life;
             }
             set
             {
-                if (this._wave != value)
-                    this._wave = value;
+                if (this._life != value)
+                    this._life = value;
+            }
+        }
+        public int Coin
+        {
+            get
+            {
+                return this._coin;
+            }
+            set
+            {
+                if (this._coin != value)
+                    this._coin = value;
             }
         }
 
         public void InitGameStart()
         {
-            Wave = 1;
-            EnemyNum = 8;
+            _life = 3;
+            EnemyNum = 100;
             _chkStart = true;
 
         }
@@ -167,86 +183,126 @@ namespace MDGame.Core
 
         public void CheckToDo()
         {
-            if (!_chkTimeSpawn)
-                SuffleTimeSpawnEnemy();
-            if (_cntTimeEnemySpawn % 6 == 0 || _cntTimeEnemySpawn % 8 == 0 || _cntTimeEnemySpawn % 10 == 0)
-                TimeTrickerEnemySpawn();
-            if (_enemyIsSpawn && !_chkChange)
+            lock (_locker)
             {
-                TimeTrickerEnemyWalk();
-            }
-            if (_heroIsSpawn && !_chkChange)
-            {
-                TimeTrickerHeroShoot();
-                _chkChange = true;
+                if (!_chkTimeSpawn)
+                    SuffleTimeSpawnEnemy();
+                if (_cntTimeEnemySpawn % 6 == 0 || _cntTimeEnemySpawn % 8 == 0 || _cntTimeEnemySpawn % 10 == 0)
+                    TimeTrickerEnemySpawn();
+                if (_enemyIsSpawn /*&& !_chkChange*/)
+                {
+                    TimeTrickerEnemyWalk();
+                }
+                if (_heroIsSpawn /*&& !_chkChange*/ )
+                {
+                    TimeTrickerHeroShoot();
+                    _chkChange = true;
+                }
             }
 
         }
+
+       
         public void TimeTrickerEnemySpawn()
         {
-            lock (_locker)
+            if (_chkTimeSpawn)
             {
-                if (_chkTimeSpawn)
+                switch (_timeSpawn)
                 {
-                    switch (_timeSpawn)
-                    {
-                        case 1:
-                            if (_cntTimeEnemySpawn % 6 == 0)
-                            {
-                                EnemySpawn();
-                                _chkChange = true;
-                                _chkTimeSpawn = false;
-                            }
-                            break;
-                        case 2:
-                            if (_cntTimeEnemySpawn % 8 == 0)
-                            {
-                                EnemySpawn();
-                                _chkChange = true;
-                                _chkTimeSpawn = false;
-                            }
-                            break;
-                        case 3:
-                            if (_cntTimeEnemySpawn % 10 == 0)
-                            {
-                                EnemySpawn();
-                                _chkChange = true;
-                                _chkTimeSpawn = false;
-                            }
-                            break;
-                    }
+                    case 1:
+                        if (_cntTimeEnemySpawn % 8 == 0)
+                        {
+                            EnemySpawn();
+                            _chkChange = true;
+                            _chkTimeSpawn = false;
+                        }
+                        break;
+                    case 2:
+                        if (_cntTimeEnemySpawn % 10 == 0)
+                        {
+                            EnemySpawn();
+                            _chkChange = true;
+                            _chkTimeSpawn = false;
+                        }
+                        break;
+                    case 3:
+                        if (_cntTimeEnemySpawn % 14 == 0)
+                        {
+                            EnemySpawn();
+                            _chkChange = true;
+                            _chkTimeSpawn = false;
+                        }
+                        break;
+                }
 
 
-                }
-                }
+
+            }
         
         }
+
         public void TimeTrickerEnemyWalk()
         {
-            lock (_locker)
-            {
-                while (/*_gameRunning*/ !_chkChange)
-                {
-                    _cntTimeEnemyWalk++;
+
+            //while (/*_gameRunning*/ !_chkChange)
+            //{
+            _cntTimeEnemyWalk++;
             foreach (var x in _enemyList)
             {
                 if (x != null && _cntTimeEnemyWalk % x.Speed == 0)
                 {
-                    x.AtX--;
-                    _board.Map[x.AtY, x.AtX] = x.ID;
-                    _board.Map[x.AtY, x.AtX++] = 0;
-                    //NotifyMap();
+                    if (x.AtX == 0)
+                    {
+                        Life--;
+                        _board.Map[x.AtY, 0] = 0;
+                        x.ID = 0;
+                        x.AtX = 100; // Bug 
+                        CheckingGameLose();
+                    }
+                    else
+                    {
+                        x.AtX--;
+                        _board.Map[x.AtY, x.AtX] = x.ID;
+                        _board.Map[x.AtY, x.AtX + 1] = 0;
+                        //NotifyMap();
+                    }
                 }
 
             }
-                    
             _chkChange = true;
-                }
-            }
+            //}
+
         }
         public void TimeTrickerHeroShoot()
         {
 
+            //while (!_chkChange)
+            //{
+            _cntTimeHeroShoot++;
+            foreach (var x in _heroList)
+            {
+                if (x != null && _cntTimeHeroShoot % x.Speed == 0)
+                {
+                    for (int i = x.AtX; i < 7; i++)
+                    {
+                        if (_board.Map[x.AtY, i] == 0) // TODO : Shooting
+                        {
+                            
+                        }
+                        if (_board.Map[x.AtY, i] != 0 && _board.Map[x.AtY, i] >= 600)
+                        {
+
+                            _enemyList[_board.Map[x.AtY, i]].Hp -= x.Damage;
+                            CheckEnemyAlive(_board.Map[x.AtY, i], x.AtY, i);
+
+                            break;
+                        }
+
+                    }
+                }
+                //}
+
+            }
         }
 
         private bool _chkTimeSpawn = false;
@@ -260,6 +316,10 @@ namespace MDGame.Core
             }
         }
 
+        public void CheckingGameLose()
+        {
+
+        }
         public void SelectHeroPosition(int x, int y)
         {
             int heroIndex = y / 100; // +2 in board
@@ -267,21 +327,27 @@ namespace MDGame.Core
             {
                 case 0:
                     _selectHero = GameBoard.HERO1;
+                    if (Coin < 100) _heroClick = false; 
                     break;
                 case 1:
                     _selectHero = GameBoard.HERO2;
+                    if (Coin < 250) _heroClick = false;
                     break;
                 case 2:
                     _selectHero = GameBoard.HERO3;
+                    if (Coin < 400) _heroClick = false;
                     break;
                 case 3:
                     _selectHero = GameBoard.HERO4;
+                    if (Coin < 800) _heroClick = false;
                     break;
                 case 4:
                     _selectHero = GameBoard.HERO5;
+                    if (Coin < 1500) _heroClick = false;
                     break;
                 case 5:
                     _selectHero = GameBoard.HERO6;
+                    if (Coin < 3000) _heroClick = false;
                     break;
             }
         }
@@ -299,7 +365,28 @@ namespace MDGame.Core
             yMapIndex = y / 100;
             if (_heroClick)
             {
-                _board.Map[yMapIndex, xMapIndex] = _heroID;  // TODO : Change _selectHero to _heroID
+                switch(_selectHero)
+                {
+                    case GameBoard.HERO1:
+                        Coin -= 100;
+                        break;
+                    case GameBoard.HERO2:
+                        Coin -= 250;
+                        break;
+                    case GameBoard.HERO3:
+                        Coin -= 400;
+                        break;
+                    case GameBoard.HERO4:
+                        Coin -= 800;
+                        break;
+                    case GameBoard.HERO5:
+                        Coin -= 1500;
+                        break;
+                    case GameBoard.HERO6:
+                        Coin -= 3000;
+                        break;
+                }
+                _board.Map[yMapIndex, xMapIndex] = _heroID; 
                 AddHero();
                 NotifyMap();
                 _heroClick = false;
@@ -309,14 +396,34 @@ namespace MDGame.Core
 
         public void NotifyMap()
         {
-            if (_view != null)
-                _view.UpdateMap(_board);
+            lock (_locker)
+            {
+                if (_view != null)
+                {
+                    //int a[] = _board.Map.;
+                    int[,] map = new int[6, 7];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 7; j++)
+                        {
+                            map[i, j] = _board.Map[i, j];
+                        }
+                    }
+                    _view.UpdateMap(map);
+                }
+            }
+            
+                
         }
-        public void NotifyEnemy()
-        {
-            if (_view != null)
-                _view.UpdateEnemy(_board);
-        }
+        //public void NotifyShooting(int i, int j)
+        //{
+
+        //}
+        //public void NotifyEnemy()
+        //{
+        //    if (_view != null)
+        //        _view.UpdateEnemy(_board);
+        //}
 
         public int[,] GetMaps(int state)
         {
@@ -335,7 +442,7 @@ namespace MDGame.Core
         //{
 
         //    int time = 0;
-        //    int TimeSpawn;
+        //    int TimeSpawn;;
         //    TimeSpawn = rand.Next(1, 4);
 
         //    switch (TimeSpawn)
@@ -378,7 +485,15 @@ namespace MDGame.Core
         }
         public void SuffleEnemy() // TODO : Number of Enemy not finished yet !!!! don't forget to do it
         {
-            switch (Wave) //  TODO : AddEneny() not sure 
+            if (_enemyNum <= 100 && _enemyNum >= 96)
+            {
+                _selectEnemy = GameBoard.ENEMY1;
+            }
+            else if (_enemyNum <= 96 && _enemyNum >= 80)
+            {
+
+            }
+            switch (_enemyNum) //  TODO : AddEneny() not sure 
             {
                 case 1:
                     if (_enemyNum == 8 || _enemyNum == 7)
@@ -424,7 +539,7 @@ namespace MDGame.Core
 
         public void AddHero() // TODO : put value of speed hp and damage of Hero!!!
         {
-            if (_heroIsSpawn)
+            if (!_heroIsSpawn)
                 _heroIsSpawn = true;
             //Hero oHero = new Hero();
             //oHero.ID = _heroID;
@@ -439,8 +554,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 100;
                     _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].Damage = 1;
                     _heroID++;
                     break;
                 case GameBoard.HERO2:
@@ -448,8 +565,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
-                    _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 250;
+                    _heroList[_heroID].Speed = 3;
+                    _heroList[_heroID].Damage = 1;
                     _heroID++;
                     break;
                 case GameBoard.HERO3:
@@ -457,8 +576,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
-                    _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 400;
+                    _heroList[_heroID].Speed = 3;
+                    _heroList[_heroID].Damage = 2;
                     _heroID++;
                     break;
                 case GameBoard.HERO4:
@@ -466,8 +587,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
-                    _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 800;
+                    _heroList[_heroID].Speed = 3;
+                    _heroList[_heroID].Damage = 5;
                     _heroID++;
                     break;
                 case GameBoard.HERO5:
@@ -475,8 +598,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 1500;
                     _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].Damage = 20;
                     _heroID++;
                     break;
                 case GameBoard.HERO6:
@@ -484,8 +609,10 @@ namespace MDGame.Core
                     _heroList[_heroID].ID = _heroID;
                     _heroList[_heroID].SelectHero = _selectHero;
                     _heroList[_heroID].AtY = yMapIndex;
-                    _heroList[_heroID].AtY = xMapIndex;
+                    _heroList[_heroID].AtX = xMapIndex;
+                    _heroList[_heroID].Cost = 5000;
                     _heroList[_heroID].Speed = 2;
+                    _heroList[_heroID].Damage = 1000;
                     _heroID++;
                     break;
             }
@@ -502,7 +629,9 @@ namespace MDGame.Core
                     _enemyList[_enemyID].SelectEnemy = _selectEnemy;
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
-                    _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Speed = 8;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY2:
@@ -511,7 +640,9 @@ namespace MDGame.Core
                     _enemyList[_enemyID].SelectEnemy = _selectEnemy;
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
-                    _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Speed = 8;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY3:
@@ -520,7 +651,9 @@ namespace MDGame.Core
                     _enemyList[_enemyID].SelectEnemy = _selectEnemy;
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
-                    _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Speed = 7;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY4:
@@ -530,6 +663,8 @@ namespace MDGame.Core
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
                     _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY5:
@@ -539,6 +674,8 @@ namespace MDGame.Core
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
                     _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY6:
@@ -547,7 +684,9 @@ namespace MDGame.Core
                     _enemyList[_enemyID].SelectEnemy = _selectEnemy;
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
-                    _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Speed = 3;
+                    _enemyList[_enemyID].Hp = 5;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++;
                     break;
                 case GameBoard.ENEMY7:
@@ -556,9 +695,21 @@ namespace MDGame.Core
                     _enemyList[_enemyID].SelectEnemy = _selectEnemy;
                     _enemyList[_enemyID].AtY = _selectLocationEnemy;
                     _enemyList[_enemyID].AtX = 6;
-                    _enemyList[_enemyID].Speed = 5;
+                    _enemyList[_enemyID].Speed = 1;
+                    _enemyList[_enemyID].Hp = 30000;
+                    _enemyList[_enemyID].CoinDrop = 50;
                     _enemyID++; ;
                     break;
+            }
+        }
+        public void CheckEnemyAlive(int id , int i , int j)
+        {
+            if (_enemyList[id].Hp <= 0)
+            {
+                _board.Map[i, j] = 0;
+                Coin += _enemyList[id].CoinDrop;
+                _enemyList[id] = null;
+                
             }
         }
         //public void TrikEnemy()

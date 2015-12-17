@@ -37,8 +37,10 @@ namespace MDGame.Core
                                  { 0 , 0 , 0 , 0 , 0 , 0 , 0 },
                                };
             _hero = new int[] { 0, 1, 2, 3, 4, 5 };
+
         }
 
+        int[][] maps;
         public int[,] Map
         {
             get

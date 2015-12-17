@@ -19,3 +19,5 @@ D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.cs
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.Properties.Resources.resources
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.Form1.resources
 D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.csproj.GenerateResource.Cache
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.View.MainForm.resources
+D:\LearningMajor\Project OOP - C#\GithubMDGame\MDGame\MDGame\obj\Debug\MDGame.View.LoadingForm.resources

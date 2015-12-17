@@ -19,6 +19,7 @@ namespace MDGame.Model
         private int _id;
         private int _timer = 0;
         private Image _image;
+        private int _price;
 
         public void InitHero()
         {
@@ -142,6 +143,18 @@ namespace MDGame.Model
             {
                 if (this._timer != value)
                     this._timer = value;
+            }
+        }
+        public int Price
+        {
+            get
+            {
+                return this._price;
+            }
+            set
+            {
+                if (this._price != value)
+                    this._price = value;
             }
         }
     }

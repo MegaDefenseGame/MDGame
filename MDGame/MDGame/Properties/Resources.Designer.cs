@@ -293,6 +293,46 @@ namespace MDGame.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Load1 {
+            get {
+                object obj = ResourceManager.GetObject("Load1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Load2 {
+            get {
+                object obj = ResourceManager.GetObject("Load2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Load3 {
+            get {
+                object obj = ResourceManager.GetObject("Load3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Load4 {
+            get {
+                object obj = ResourceManager.GetObject("Load4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SpecialHero {
             get {
                 object obj = ResourceManager.GetObject("SpecialHero", resourceCulture);
@@ -303,9 +343,49 @@ namespace MDGame.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap StartButton {
+            get {
+                object obj = ResourceManager.GetObject("StartButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap wall_resize {
             get {
                 object obj = ResourceManager.GetObject("wall_resize", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap แพ้ไอ่สัส {
+            get {
+                object obj = ResourceManager.GetObject("แพ้ไอ่สัส", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ชนะเย้ {
+            get {
+                object obj = ResourceManager.GetObject("ชนะเย้", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap หน้าเริ่ม {
+            get {
+                object obj = ResourceManager.GetObject("หน้าเริ่ม", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
